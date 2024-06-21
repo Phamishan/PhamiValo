@@ -1,16 +1,25 @@
-# coffee_card
+# PhamiValo - Mobile app for Phamishan & friends
 
-A new Flutter project.
+## Features:
 
-## Getting Started
+```
+🔒 - Riot authentication
+Login with the help of RIOT.
 
-This project is a starting point for a Flutter application.
+👤 - Account info
+View account level, rank, RR.
 
-A few resources to get you started if this is your first Flutter project:
+🏆 - Recent matches
+View recent matches (agent, score, k/d).
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+🔍 - Find players
+Search for players and add them to your list.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+🛒 - Daily store + bundle(s)
+View YOUR Daily store and current bundle(s).
+```
+
+## Version History (PENDING)
+
+-   1.0.0 - xx/xx/xxxx
+    -   Initial Release
