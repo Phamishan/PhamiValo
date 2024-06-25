@@ -19,6 +19,10 @@ Search for players and add them to your list.
 View YOUR Daily store and current bundle(s).
 ```
 
+## Disclaimer
+
+PhamiValo was created under Riot Games' "[Legal Jibber Jabber](https://www.riotgames.com/en/legal)" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.
+
 ## Version History (PENDING)
 
 -   1.0.0 - xx/xx/xxxx
