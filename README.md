@@ -16,7 +16,7 @@ View recent matches (agent, score, k/d).
 Search for players and add them to your list.
 
 🛒 - Daily store + bundle(s)
-View YOUR Daily store and current bundle(s).
+View YOUR daily store and current bundle(s).
 ```
 
 ## Disclaimer
