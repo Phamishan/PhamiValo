@@ -19,6 +19,10 @@ Search for players and add them to your list.
 View YOUR daily store and current bundle(s).
 ```
 
+## Backend:
+
+Backend hosted @ Replit.com
+
 ## Disclaimer
 
 PhamiValo was created under Riot Games' "[Legal Jibber Jabber](https://www.riotgames.com/en/legal)" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.

@@ -35,6 +35,9 @@ dependencies:
     # Use with the CupertinoIcons class for iOS style icons.
     cupertino_icons: ^1.0.6
     stroke_text: ^0.0.3
+    http: ^1.2.2
+    dotenv: ^4.2.0
+    flutter_dotenv: ^5.1.0
 
 dev_dependencies:
     flutter_test:
@@ -55,12 +58,9 @@ flutter_native_splash:
 # The following section is specific to Flutter packages.
 flutter:
     fonts:
-        - family: JockeyOne
+        - family: Oswald
           fonts:
-              - asset: assets/fonts/JockeyOne-Regular.ttf
-        - family: JosefinSans
-          fonts:
-              - asset: assets/fonts/JosefinSans-Regular.ttf
+              - asset: assets/fonts/Oswald-Regular.ttf
 
     assets:
         - assets/images/
