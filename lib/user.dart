@@ -1,11 +1,12 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:stroke_text/stroke_text.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:PhamiValo/search.dart';
 import 'package:PhamiValo/store.dart';
 
@@ -17,14 +18,11 @@ class User extends StatefulWidget {
 }
 
 class _UserState extends State<User> {
-  final urlPlayerInfo =
-      "https://d3d262f5-a02b-49c9-a036-6480023c4393-00-2egiss39iqtny.riker.replit.dev/PhamiValo/playerInfo";
+  final urlPlayerInfo = "http://localhost:3000/PhamiValo/playerInfo";
 
-  final urlRank =
-      "https://d3d262f5-a02b-49c9-a036-6480023c4393-00-2egiss39iqtny.riker.replit.dev/PhamiValo/playerRank";
+  final urlRank = "http://localhost:3000/PhamiValo/playerRank";
 
-  final urlMatchList =
-      "https://d3d262f5-a02b-49c9-a036-6480023c4393-00-2egiss39iqtny.riker.replit.dev/PhamiValo/getMatches";
+  final urlMatchList = "http://localhost:3000/PhamiValo/getMatches";
 
   Map<String, dynamic> _playerInfoJson = {};
   Map<String, dynamic> _playerRankJson = {};
@@ -34,7 +32,15 @@ class _UserState extends State<User> {
 
   void getPlayerInfo() async {
     try {
-      final response = await http.get(Uri.parse(urlPlayerInfo));
+      final response = await http.post(
+        Uri.parse(urlPlayerInfo),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'input': "PH4M1#YIN",
+        }),
+      );
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
 
       setState(() {
@@ -47,7 +53,15 @@ class _UserState extends State<User> {
 
   void getPlayerRank() async {
     try {
-      final response = await http.get(Uri.parse(urlRank));
+      final response = await http.post(
+        Uri.parse(urlRank),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'input': "PH4M1#YIN",
+        }),
+      );
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
 
       setState(() {
@@ -60,7 +74,15 @@ class _UserState extends State<User> {
 
   void getMatchList() async {
     try {
-      final response = await http.get(Uri.parse(urlMatchList));
+      final response = await http.post(
+        Uri.parse(urlMatchList),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'puuid': "796c8a28-4293-5bbf-9183-5d95cdce243a",
+        }),
+      );
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
 
       List<String> matchList = [];
@@ -186,7 +208,7 @@ class _UserState extends State<User> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
@@ -390,7 +412,6 @@ class _UserState extends State<User> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      color: const Color(0xFFCCCAC3),
                       margin: const EdgeInsets.all(5),
                       child: IconButton(
                         icon: Image.asset("assets/images/icons/user-solid.png"),
