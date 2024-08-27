@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:stroke_text/stroke_text.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:PhamiValo/store.dart';
 import 'package:PhamiValo/user.dart';
@@ -27,14 +24,11 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   TextEditingController _input = TextEditingController();
 
-  final urlPlayerInfo =
-      "https://d3d262f5-a02b-49c9-a036-6480023c4393-00-2egiss39iqtny.riker.replit.dev/PhamiValo/playerInfo";
+  final urlPlayerInfo = "https://phamivalo.onrender.com/PhamiValo/playerInfo";
 
-  final urlRank =
-      "https://d3d262f5-a02b-49c9-a036-6480023c4393-00-2egiss39iqtny.riker.replit.dev/PhamiValo/playerRank";
+  final urlRank = "https://phamivalo.onrender.com/PhamiValo/playerRank";
 
-  final urlMatchList =
-      "https://d3d262f5-a02b-49c9-a036-6480023c4393-00-2egiss39iqtny.riker.replit.dev/PhamiValo/getMatches";
+  final urlMatchList = "https://phamivalo.onrender.com/PhamiValo/getMatches";
 
   Map<String, dynamic> _playerInfoJson = {};
   Map<String, dynamic> _playerRankJson = {};
@@ -42,14 +36,16 @@ class _SearchState extends State<Search> {
 
   final matches = <Widget>[];
 
-  void getPlayerInfo() async {
+  Future<void> getPlayerInfo() async {
     try {
       final response = await http.post(
         Uri.parse(urlPlayerInfo),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, dynamic>{'input': _input.text}),
+        body: jsonEncode(<String, dynamic>{
+          'input': _input.text,
+        }),
       );
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -61,7 +57,7 @@ class _SearchState extends State<Search> {
     }
   }
 
-  void getPlayerRank() async {
+  Future<void> getPlayerRank() async {
     try {
       final response = await http.post(
         Uri.parse(urlRank),
@@ -82,7 +78,7 @@ class _SearchState extends State<Search> {
     }
   }
 
-  void getMatchList() async {
+  Future<void> getMatchList() async {
     try {
       final response = await http.post(
         Uri.parse(urlMatchList),
@@ -90,7 +86,7 @@ class _SearchState extends State<Search> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, dynamic>{
-          'puuid': "796c8a28-4293-5bbf-9183-5d95cdce243a",
+          'input': _input.text,
         }),
       );
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
@@ -150,13 +146,7 @@ class _SearchState extends State<Search> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getPlayerInfo();
-    getPlayerRank();
-    getMatchList();
-  }
+  bool _isVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -176,16 +166,8 @@ class _SearchState extends State<Search> {
           IconButton(
             icon: Image.asset("assets/images/icons/search-solid.png"),
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    // Retrieve the text the that user has entered by using the
-                    // TextEditingController.
-                    content: Text(_input.text),
-                  );
-                },
-              );
+              getPlayerInfo();
+              getPlayerRank();
             },
           )
         ],
@@ -204,198 +186,213 @@ class _SearchState extends State<Search> {
           ),
           Stack(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: const Color(0xFFE6E3DC).withOpacity(0.8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isVisible = !_isVisible; // Toggle visibility
+                  });
+                },
+                child: Opacity(
+                  opacity: _isVisible
+                      ? 1.0
+                      : 0.0, // Change opacity based on visibility
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: const Color(0xFFE6E3DC).withOpacity(0.8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                margin: const EdgeInsets.only(
-                  top: 100.0,
-                  bottom: 100.0,
-                  right: 25.0,
-                  left: 25.0,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25),
-                        ),
-                        child: Container(
-                          child: _playerInfoJson.isEmpty
-                              ? Center(
-                                  child: CircularProgressIndicator(
-                                  color: Colors.black,
-                                ))
-                              : Image.network(
-                                  _playerInfoJson['res']['data']['card']
-                                      ['wide'],
-                                  fit: BoxFit.fitWidth,
-                                ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 15, right: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: 100,
-                              height: 100,
-                              child: _playerRankJson.isEmpty
+                    margin: const EdgeInsets.only(
+                      top: 100.0,
+                      bottom: 100.0,
+                      right: 25.0,
+                      left: 25.0,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              topRight: Radius.circular(25),
+                            ),
+                            child: Container(
+                              child: _playerInfoJson.isEmpty
                                   ? Center(
                                       child: CircularProgressIndicator(
                                       color: Colors.black,
                                     ))
                                   : Image.network(
-                                      _playerRankJson['res']['data']
-                                          ['current_data']['images']['large'],
-                                      fit: BoxFit.contain,
+                                      _playerInfoJson['res']['data']['card']
+                                          ['wide'],
+                                      fit: BoxFit.fitWidth,
                                     ),
                             ),
-                            Column(
-                              children: [
-                                Text(""),
-                              ],
-                            ),
-                            Column(
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 15, right: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                  child: Column(
-                                    children: [
-                                      _playerRankJson.isEmpty
+                                  width: 100,
+                                  height: 100,
+                                  child: _playerRankJson.isEmpty
+                                      ? Center(
+                                          child: CircularProgressIndicator(
+                                          color: Colors.black,
+                                        ))
+                                      : Image.network(
+                                          _playerRankJson['res']['data']
+                                                  ['current_data']['images']
+                                              ['large'],
+                                          fit: BoxFit.contain,
+                                        ),
+                                ),
+                                Column(
+                                  children: [
+                                    Text(""),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Container(
+                                      child: Column(
+                                        children: [
+                                          _playerRankJson.isEmpty
+                                              ? Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                  color: Colors.black,
+                                                ))
+                                              : StrokeText(
+                                                  text:
+                                                      "${_playerRankJson['res']['data']['current_data']['currenttierpatched']}",
+                                                  textStyle: TextStyle(
+                                                    fontFamily: "Oswald",
+                                                    color: Colors.black,
+                                                    fontSize: 20,
+                                                  ),
+                                                ),
+                                          _playerRankJson.isEmpty
+                                              ? Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                  color: Colors.black,
+                                                ))
+                                              : StrokeText(
+                                                  text:
+                                                      "${_playerRankJson['res']['data']['current_data']['ranking_in_tier']} RR",
+                                                  textStyle: TextStyle(
+                                                    fontFamily: "Oswald",
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.all(15),
+                                      alignment: Alignment.topLeft,
+                                      child: _playerInfoJson.isEmpty
                                           ? Center(
                                               child: CircularProgressIndicator(
                                               color: Colors.black,
                                             ))
                                           : StrokeText(
                                               text:
-                                                  "${_playerRankJson['res']['data']['current_data']['currenttierpatched']}",
+                                                  "LEVEL: ${_playerInfoJson['res']['data']['account_level']}",
                                               textStyle: TextStyle(
                                                 fontFamily: "Oswald",
                                                 color: Colors.black,
                                                 fontSize: 20,
                                               ),
                                             ),
-                                      _playerRankJson.isEmpty
-                                          ? Center(
-                                              child: CircularProgressIndicator(
-                                              color: Colors.black,
-                                            ))
-                                          : StrokeText(
-                                              text:
-                                                  "${_playerRankJson['res']['data']['current_data']['ranking_in_tier']} RR",
-                                              textStyle: TextStyle(
-                                                fontFamily: "Oswald",
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                    ],
-                                  ),
-                                )
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Text(""),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.all(15),
+                                      alignment: Alignment.bottomRight,
+                                      child: StrokeText(
+                                        text: "EPISODE 9 - ACT 1",
+                                        textStyle: TextStyle(
+                                          fontFamily: "Oswald",
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
+                          ),
+                          Container(
+                            margin: const EdgeInsets.all(5),
+                            alignment: Alignment.center,
+                            child: StrokeText(
+                              text: "LAST 5 RANKED GAMES:",
+                              textStyle: TextStyle(
+                                fontFamily: "Oswald",
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 30),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.all(15),
-                                  alignment: Alignment.topLeft,
-                                  child: _playerInfoJson.isEmpty
+                                for (int i = 0; i < 5; i++)
+                                  _matchListJson.isEmpty
                                       ? Center(
                                           child: CircularProgressIndicator(
                                           color: Colors.black,
                                         ))
                                       : StrokeText(
-                                          text:
-                                              "LEVEL: ${_playerInfoJson['res']['data']['account_level']}",
+                                          text: "${_matchListJson[i]}",
                                           textStyle: TextStyle(
-                                            fontFamily: "Oswald",
-                                            color: Colors.black,
                                             fontSize: 20,
+                                            fontFamily: "JockeyOne",
+                                            color: Colors.black,
                                           ),
                                         ),
-                                ),
                               ],
                             ),
-                            Column(
-                              children: [
-                                Text(""),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.all(15),
-                                  alignment: Alignment.bottomRight,
-                                  child: StrokeText(
-                                    text: "EPISODE 9 - ACT 1",
-                                    textStyle: TextStyle(
-                                      fontFamily: "Oswald",
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                          )
+                        ],
                       ),
-                      Container(
-                        margin: const EdgeInsets.all(5),
-                        alignment: Alignment.center,
-                        child: StrokeText(
-                          text: "LAST 5 RANKED GAMES:",
-                          textStyle: TextStyle(
-                            fontFamily: "Oswald",
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            for (int i = 0; i < 5; i++)
-                              _matchListJson.isEmpty
-                                  ? Center(
-                                      child: CircularProgressIndicator(
-                                      color: Colors.black,
-                                    ))
-                                  : StrokeText(
-                                      text: "${_matchListJson[i]}",
-                                      textStyle: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "JockeyOne",
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                          ],
-                        ),
-                      )
-                    ],
+                    ),
                   ),
                 ),
               ),

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:stroke_text/stroke_text.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:PhamiValo/search.dart';
 import 'package:PhamiValo/store.dart';
@@ -18,11 +15,11 @@ class User extends StatefulWidget {
 }
 
 class _UserState extends State<User> {
-  final urlPlayerInfo = "http://localhost:3000/PhamiValo/playerInfo";
+  final urlPlayerInfo = "https://phamivalo.onrender.com/PhamiValo/playerInfo";
 
-  final urlRank = "http://localhost:3000/PhamiValo/playerRank";
+  final urlRank = "https://phamivalo.onrender.com/PhamiValo/playerRank";
 
-  final urlMatchList = "http://localhost:3000/PhamiValo/getMatches";
+  final urlMatchList = "https://phamivalo.onrender.com/PhamiValo/getMatches";
 
   Map<String, dynamic> _playerInfoJson = {};
   Map<String, dynamic> _playerRankJson = {};
@@ -80,7 +77,7 @@ class _UserState extends State<User> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, dynamic>{
-          'puuid': "796c8a28-4293-5bbf-9183-5d95cdce243a",
+          'input': "PH4M1#YIN",
         }),
       );
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;

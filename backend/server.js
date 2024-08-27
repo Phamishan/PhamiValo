@@ -24,6 +24,7 @@ app.post("/PhamiValo/playerInfo", async (req, res) => {
         res.status(400).json({ msg: error.message });
     }
 });
+
 app.post("/PhamiValo/playerRank", async (req, res) => {
     const playerNameAndTag = req.body.input.split("#");
 
@@ -38,10 +39,14 @@ app.post("/PhamiValo/playerRank", async (req, res) => {
         res.status(400).json({ msg: error.message });
     }
 });
-app.post("/PhamiValo/getMatches", async (req, res) => {
-    const puuid = req.body.puuid;
 
-    const responseForMatches = await fetch(`https://api.henrikdev.xyz/valorant/v3/by-puuid/matches/eu/${puuid}?mode=competitive`, { headers: { Authorization: process.env.VL_API } });
+app.post("/PhamiValo/getMatches", async (req, res) => {
+    const playerNameAndTag = req.body.input.split("#");
+
+    const playerName = playerNameAndTag[0];
+    const playerTag = playerNameAndTag[1];
+
+    const responseForMatches = await fetch(`https://api.henrikdev.xyz/valorant/v3/matches/eu/${playerName}/${playerTag}?mode=competitive`, { headers: { Authorization: process.env.VL_API } });
     const resForMatches = await responseForMatches.json();
     try {
         res.status(200).json({ res: resForMatches });
