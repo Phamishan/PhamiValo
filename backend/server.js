@@ -46,7 +46,7 @@ app.post("/PhamiValo/getMatches", async (req, res) => {
     const playerName = playerNameAndTag[0];
     const playerTag = playerNameAndTag[1];
 
-    const responseForMatches = await fetch(`https://api.henrikdev.xyz/valorant/v3/matches/eu/${playerName}/${playerTag}?mode=competitive`, { headers: { Authorization: process.env.VL_API } });
+    const responseForMatches = await fetch(`https://api.henrikdev.xyz/valorant/v3/matches/eu/${playerName}/${playerTag}?mode=competitive&size=5`, { headers: { Authorization: process.env.VL_API } });
     const resForMatches = await responseForMatches.json();
     try {
         res.status(200).json({ res: resForMatches });

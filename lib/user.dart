@@ -339,7 +339,7 @@ class _UserState extends State<User> {
                                   margin: const EdgeInsets.all(15),
                                   alignment: Alignment.bottomRight,
                                   child: StrokeText(
-                                    text: "EPISODE 9 - ACT 1",
+                                    text: "EPISODE 9 - ACT 2",
                                     textStyle: TextStyle(
                                       fontFamily: "Oswald",
                                       color: Colors.black,
