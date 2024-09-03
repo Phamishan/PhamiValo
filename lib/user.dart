@@ -409,6 +409,7 @@ class _UserState extends State<User> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
+                      color: const Color(0xFFCCCAC3),
                       margin: const EdgeInsets.all(5),
                       child: IconButton(
                         icon: Image.asset("assets/images/icons/user-solid.png"),

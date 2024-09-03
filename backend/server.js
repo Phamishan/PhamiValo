@@ -55,6 +55,26 @@ app.post("/PhamiValo/getMatches", async (req, res) => {
     }
 });
 
+app.get("/PhamiValo/getBundle", async (req, res) => {
+    const searchForBundle = await fetch(`https://api.henrikdev.xyz/valorant/v2/store-featured`, { headers: { Authorization: process.env.VL_API } });
+    const resForBundleSearch = await searchForBundle.json();
+    const bundleUUID = resForBundleSearch.data[0].bundle_uuid;
+
+    const getBundleImage = await fetch(`https://valorant-api.com/v1/bundles`);
+    const resForBundleImage = await getBundleImage.json();
+    for (let i = 0; i < resForBundleImage.data.length; i++) {
+        if (resForBundleImage.data[i].uuid == bundleUUID) {
+            var bundleImage = resForBundleImage.data[i].displayIcon;
+
+            try {
+                res.status(200).json({ image: bundleImage });
+            } catch (error) {
+                res.status(400).json({ msg: error.message });
+            }
+        }
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

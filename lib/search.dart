@@ -36,7 +36,20 @@ class _SearchState extends State<Search> {
 
   final matches = <Widget>[];
 
+  bool _isVisible = false;
+
   Future<void> getPlayerInfo() async {
+    if (_input.text == "") {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text("Error, no input detected."),
+          );
+        },
+      );
+      return;
+    }
     try {
       final response = await http.post(
         Uri.parse(urlPlayerInfo),
@@ -49,6 +62,20 @@ class _SearchState extends State<Search> {
       );
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
 
+      if (jsonData['res']['status'] != 200) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text("Error, player not found."),
+            );
+          },
+        );
+        setState(() {
+          _isVisible = !_isVisible; // Toggle visibility
+        });
+        return;
+      }
       setState(() {
         _playerInfoJson = jsonData;
       });
@@ -58,6 +85,9 @@ class _SearchState extends State<Search> {
   }
 
   Future<void> getPlayerRank() async {
+    if (_input.text == "") {
+      return;
+    }
     try {
       final response = await http.post(
         Uri.parse(urlRank),
@@ -70,6 +100,12 @@ class _SearchState extends State<Search> {
       );
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
 
+      if (jsonData['res']['status'] != 200) {
+        setState(() {
+          _isVisible = !_isVisible; // Toggle visibility
+        });
+        return;
+      }
       setState(() {
         _playerRankJson = jsonData;
       });
@@ -79,6 +115,9 @@ class _SearchState extends State<Search> {
   }
 
   Future<void> getMatchList() async {
+    if (_input.text == "") {
+      return;
+    }
     try {
       _matchListJson.clear();
       final response = await http.post(
@@ -92,6 +131,13 @@ class _SearchState extends State<Search> {
       );
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
       List<String> matchList = [];
+
+      if (jsonData['res']['status'] != 200) {
+        setState(() {
+          _isVisible = !_isVisible; // Toggle visibility
+        });
+        return;
+      }
 
       for (int i = 0; i < 5; i++) {
         for (int j = 0;
@@ -146,8 +192,6 @@ class _SearchState extends State<Search> {
     }
   }
 
-  bool _isVisible = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -170,7 +214,7 @@ class _SearchState extends State<Search> {
               getPlayerRank();
               getMatchList();
 
-              if (_isVisible == false) {
+              if (_isVisible == false && _input.text != "") {
                 setState(() {
                   _isVisible = !_isVisible; // Toggle visibility
                 });
@@ -423,6 +467,7 @@ class _SearchState extends State<Search> {
                       ),
                     ),
                     Container(
+                      color: const Color(0xFFCCCAC3),
                       margin: const EdgeInsets.all(5),
                       child: IconButton(
                         icon:

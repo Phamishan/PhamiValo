@@ -12,6 +12,6 @@ import 'package:stroke_text/stroke_text.dart';
 
 void main() {
   runApp(
-    const MaterialApp(home: User()),
+    const MaterialApp(home: Search()),
   );
 }

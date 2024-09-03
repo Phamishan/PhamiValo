@@ -15,17 +15,14 @@ class Store extends StatefulWidget {
 }
 
 class _StoreState extends State<Store> {
-  final urlCurrentBundle =
-      "https://api.henrikdev.xyz/valorant/v2/store-featured";
-  final urlGetBundles = "https://valorant-api.com/v1/bundles";
+  final urlGetBundle = "https://phamivalo.onrender.com/PhamiValo/getBundle";
 
-  Map<String, dynamic> _currentBundleJson = {};
-  Map<String, dynamic> _getBundles = {};
+  Map<String, dynamic> _getBundle = {};
 
-  void getCurrentBundle() async {
+  void getBundle() async {
     try {
       final response = await http.get(
-        Uri.parse(urlCurrentBundle),
+        Uri.parse(urlGetBundle),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -33,25 +30,7 @@ class _StoreState extends State<Store> {
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
 
       setState(() {
-        _currentBundleJson = jsonData;
-      });
-    } catch (e) {
-      print("ERROR: $e");
-    }
-  }
-
-  void getBundleImage() async {
-    try {
-      final response = await http.post(
-        Uri.parse(urlGetBundles),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
-      final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
-
-      setState(() {
-        _getBundles = jsonData;
+        _getBundle = jsonData;
       });
     } catch (e) {
       print("ERROR: $e");
@@ -61,15 +40,7 @@ class _StoreState extends State<Store> {
   @override
   void initState() {
     super.initState();
-    getCurrentBundle();
-    //getBundleImage();
-    /*
-    var bundleImage = "";
-    if (_currentBundleJson['data']['0']['uuid'] ==
-        _getBundles['data']['0']['bundle_uuid']) {
-      bundleImage = _getBundles['data']['0']['display_icon'];
-    }
-    */
+    getBundle();
   }
 
   @override
@@ -107,8 +78,8 @@ class _StoreState extends State<Store> {
                   margin: const EdgeInsets.all(25),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(25),
-                    child: Image.asset(
-                      "images/rgxBundle.png",
+                    child: Image.network(
+                      _getBundle["image"],
                       fit: BoxFit.contain,
                     ),
                   ),
