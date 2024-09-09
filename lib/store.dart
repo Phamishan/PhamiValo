@@ -78,10 +78,15 @@ class _StoreState extends State<Store> {
                   margin: const EdgeInsets.all(25),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(25),
-                    child: Image.network(
-                      _getBundle["image"],
-                      fit: BoxFit.contain,
-                    ),
+                    child: _getBundle.isEmpty
+                        ? Center(
+                            child: CircularProgressIndicator(
+                            color: Colors.black,
+                          ))
+                        : Image.network(
+                            _getBundle["image"],
+                            fit: BoxFit.contain,
+                          ),
                   ),
                   decoration: BoxDecoration(
                     boxShadow: [
